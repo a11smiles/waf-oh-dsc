@@ -100,7 +100,7 @@ Configuration WindowsWebServer {
             ProductId = "B1B05FBB-1255-4F5B-9BAF-43B971A92613"
             Arguments = "/quiet /norestart /log C:\temp\dnhosting_install.log"
             Path = "C:\temp\dnhosting.exe"
-            DependsOn = @("[WindowsFeature]InstallIIS",
+            DependsOn = @("[WindowsFeature]WebServerRole",
                           "[xRemoteFile]DownloadDotNetCoreHostingBundle")
         }
 
