@@ -1,6 +1,6 @@
 Configuration WindowsWebServer {
 
-    Import-DscResource -ModuleName PSDesiredStateConfiguration, xWebAdministration
+    Import-DscResource -ModuleName xPSDesiredStateConfiguration, xWebAdministration, xNetworking
 
     Node localhost {
 
@@ -82,15 +82,107 @@ Configuration WindowsWebServer {
             Name            = 'Web-Mgmt-Console'
             DependsOn       = '[WindowsFeature]WebServerRole'
         } 
-  
-        xWebsite DefaultSite   
-        {  
-            Ensure          = 'Present'
-            Name            = 'Default Web Site'
-            PhysicalPath    = 'C:\inetpub\wwwroot' 
+
+        <#
+            Install Dotnet Core Hosting Bundle
+        #>
+        xRemoteFile DownloadDotNetCoreHostingBundle {
+            Uri = "https://download.visualstudio.microsoft.com/download/pr/c887d56b-4667-4e1d-9b6c-95a32dd65622/97e3eef489af8a6950744c4f9bde73c0/dotnet-hosting-5.0.8-win.exe"
+            DestinationPath = "C:\temp\dnhosting.exe"
+            MatchSource = $false
+            #Proxy = "optional, your corporate proxy here"
+            #ProxyCredential = "optional, your corporate proxy credential here"
+        }
+
+        # Discover your product name and id with Get-WmiObject Win32_product | ft IdentifyingNumber,Name after installing it once
+        xPackage InstallDotNetCoreHostingBundle {
+            Name = "Microsoft ASP.NET Core Module"
+            ProductId = "5F4F8829-61F6-462A-B3FB-8E4C96CDA70C"
+            Arguments = "/quiet /norestart /log C:\temp\dnhosting_install.log"
+            Path = "C:\temp\dnhosting.exe"
+            DependsOn = @("[WindowsFeature]WebServerRole",
+                          "[xRemoteFile]DownloadDotNetCoreHostingBundle")
+        }
+
+        Script PutDotNetOnPath {
+            SetScript = {
+                $env:Path = $env:Path + "C:\Program Files\dotnet\;"
+            }
+            TestScript = {
+                return $env:Path.Contains("C:\Program Files\dotnet\;")
+            }
+            GetScript = {
+                return @{
+                    SetScript = $SetScript
+                    TestScript = $TestScript
+                    GetScript = $GetScript
+                    Result = "Set dotnet path"
+                }
+            }
+        }
+
+
+        <#
+            Configure Web Sites
+        #>
+        xWebAppPool DefaultAppPool {
+            Name            = 'DefaultAppPool'
+            Ensure          = 'Absent'
+        }
+
+        xWebsite DefaultSite
+        {
+            Ensure          = 'Absent'
+            Name            = 'Default Web Site' 
+            PhysicalPath    = 'C:\inetpub\wwwroot'
+        }
+
+        xWebAppPool WoodgroveBankUIWebAppPool {
+            Name            = 'WoodgroveBankUIPool'
             DependsOn       = '[WindowsFeature]WebServerRole'
         }
 
+        xWebsite WoodgroveBankUI   
+        {  
+            Ensure          = 'Present'
+            Name            = 'WoodgroveBankUI'
+            PhysicalPath    = 'D:\web'
+            BindingInfo     = MSFT_xWebBindingInformation
+                {
+                    Protocol = 'HTTP'
+                    Port = 80
+                    HostName = '*'
+                }
+            State           = 'Started'
+            ApplicationPool = 'WoodgroveBankUIPool'
+            DependsOn       = '[xWebAppPool]WoodgroveBankUIWebAppPool'
+        }
+        
+        xWebAppPool WoodgroveBankAPIWebAppPool {
+            Name            = 'WoodgroveBankAPIPool'
+            DependsOn       = '[WindowsFeature]WebServerRole'
+        }
+        
+        xWebsite WoodgroveBankAPI   
+        {  
+            Ensure          = 'Present'
+            Name            = 'WoodgroveBankAPI'
+            PhysicalPath    = 'D:\api'
+            BindingInfo     = MSFT_xWebBindingInformation
+                {
+                    Protocol = 'HTTP'
+                    Port = 8080
+                    HostName = '*'
+                }
+            State           = 'Started'
+            ApplicationPool = 'WoodgroveBankAPIPool'
+            DependsOn       = '[xwebAppPool]WoodgroveBankAPIWebAppPool'
+        }
+
+
+        <#
+            Install Web Deploy
+        #>
 	    Script DownloadWebDeploy
         {
             TestScript = {
