@@ -9,7 +9,7 @@
     <#
     [string]$sqlUsername = 'cloudsqladmin'
     [string]$sqlPassword = 'Pass@word1234!'
-    [securestring]$sqlSecuredPassword = ConvertTo-SecureString $password -AsPlainText -Force
+    [securestring]$sqlSecuredPassword = ConvertTo-SecureString $sqlPassword -AsPlainText -Force
     [pscredential]$sqlLoginCredential = New-Object System.Management.Automation.PSCredential ($sqlUsername, $sqlSecuredPassword)
     #>
     
@@ -24,7 +24,7 @@
 
       #      PsDscRunAsCredential = $sqlLoginCredential
         }
-
+        <#
         SqlLogin CreateDatabaseLogin
         {
             Ensure          = 'Present'
@@ -54,5 +54,6 @@
         #    PsDscRunAsCredential = $sqlLoginCredential
             DependsOn       = '[SqlLogin]CreateDatabaseLogin'
         }
+        #>
       }
 }

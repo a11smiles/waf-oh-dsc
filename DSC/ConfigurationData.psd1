@@ -2,7 +2,7 @@
     AllNodes = @(
         @{
             NodeName = '*'
-            PSDscAllowPlainTextPassword = $true
+            PsDscAllowPlainTextPassword = $true
         }
     )
 }
