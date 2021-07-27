@@ -97,7 +97,7 @@ Configuration WindowsWebServer {
         # Discover your product name and id with Get-WmiObject Win32_product | ft IdentifyingNumber,Name after installing it once
         xPackage InstallDotNetCoreHostingBundle {
             Name = "Microsoft ASP.NET Core Module"
-            ProductId = "B1B05FBB-1255-4F5B-9BAF-43B971A92613"
+            ProductId = "5F4F8829-61F6-462A-B3FB-8E4C96CDA70C"
             Arguments = "/quiet /norestart /log C:\temp\dnhosting_install.log"
             Path = "C:\temp\dnhosting.exe"
             DependsOn = @("[WindowsFeature]WebServerRole",
