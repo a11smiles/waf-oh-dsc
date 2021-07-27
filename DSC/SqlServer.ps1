@@ -6,12 +6,12 @@
     [string]$password = 'S0m3R@ndomW0rd$'
     [securestring]$securedPassword = ConvertTo-SecureString $password -AsPlainText -Force
     [pscredential]$loginCredential = New-Object System.Management.Automation.PSCredential ($username, $securedPassword)
-
+    <#
     [string]$sqlUsername = 'cloudsqladmin'
     [string]$sqlPassword = 'Pass@word1234!'
     [securestring]$sqlSecuredPassword = ConvertTo-SecureString $password -AsPlainText -Force
     [pscredential]$sqlLoginCredential = New-Object System.Management.Automation.PSCredential ($sqlUsername, $sqlSecuredPassword)
-
+    #>
     
     Node localhost {
 
@@ -22,7 +22,7 @@
             Name            = 'CustomerPortal'
             InstanceName = 'MSSSQLSERVER'
 
-            PsDscRunAsCredential = $sqlLoginCredential
+      #      PsDscRunAsCredential = $sqlLoginCredential
         }
 
         SqlLogin CreateDatabaseLogin
@@ -37,7 +37,7 @@
             LoginPasswordExpirationEnabled = $false
             LoginPasswordPolicyEnforced    = $true
 
-            PsDscRunAsCredential = $sqlLoginCredential
+       #     PsDscRunAsCredential = $sqlLoginCredential
             DependsOn       = '[SqlDatabase]CreateDatabase'
         }
 
@@ -51,7 +51,7 @@
             UserType        = 'Login'
             LoginName       = 'webapp'
 
-            PsDscRunAsCredential = $sqlLoginCredential
+        #    PsDscRunAsCredential = $sqlLoginCredential
             DependsOn       = '[SqlLogin]CreateDatabaseLogin'
         }
       }
