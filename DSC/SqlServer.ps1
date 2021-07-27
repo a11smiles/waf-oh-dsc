@@ -1,6 +1,6 @@
 ﻿Configuration WindowsWebServer {
 
-    Import-DscResource -ModuleName xPSDesiredStateConfiguration, SqlServerDsc
+    Import-DscResource -ModuleName xPSDesiredStateConfiguration, xSqlServer
 
     [string]$username = 'webapp'
     [string]$password = 'S0m3R@ndomW0rd$'
@@ -15,7 +15,7 @@
     
     Node localhost {
 
-        SqlDatabase CreateDatabase
+        xSqlDatabase CreateDatabase
         {
             Ensure          = 'Present'
             ServerName      = 'sqlsvr1'
@@ -24,7 +24,7 @@
             PsDscRunAsCredential = $sqlLoginCredential
         }
 
-        SqlLogin CreateDatabaseLogin
+        xSqlLogin CreateDatabaseLogin
         {
             Ensure          = 'Present'
             Name            = 'webapp'
@@ -39,7 +39,7 @@
             DependsOn       = '[SqlDatabase]CreateDatabase'
         }
 
-        SqlDatabaseUser CreateDatabaseUser
+        xSqlDatabaseUser CreateDatabaseUser
         {
             Ensure          = 'Present'
             ServerName      = 'sqlsvr1'
