@@ -87,7 +87,7 @@ Configuration WindowsWebServer {
             Install Dotnet Core Hosting Bundle
         #>
         xRemoteFile DownloadDotNetCoreHostingBundle {
-            Uri = "https://go.microsoft.com/fwlink/?linkid=844461" #https://docs.microsoft.com/en-us/aspnet/core/publishing/iis
+            Uri = "https://download.visualstudio.microsoft.com/download/pr/c887d56b-4667-4e1d-9b6c-95a32dd65622/97e3eef489af8a6950744c4f9bde73c0/dotnet-hosting-5.0.8-win.exe"
             DestinationPath = "C:\temp\dnhosting.exe"
             MatchSource = $false
             #Proxy = "optional, your corporate proxy here"
