@@ -1,4 +1,4 @@
-﻿Configuration WindowsWebServer {
+﻿Configuration SqlServer {
 
     Import-DscResource -ModuleName xPSDesiredStateConfiguration, xSqlServer
 
