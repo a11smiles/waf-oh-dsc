@@ -91,18 +91,37 @@ Configuration WindowsWebServer {
             PhysicalPath    = 'C:\inetpub\wwwroot'
         }
 
+        xWebsite WoodgroveBankUI   
+        {  
+            Ensure          = 'Present'
+            Name            = 'WoodgroveBankUI'
+            PhysicalPath    = 'D:\web'
+            BindingInfo     = MSFT_xWebBindingInformation
+                {
+                    Protocol = 'HTTP'
+                    Port = 80
+                    HostName = '*'
+                }
+            State           = 'Started'
+            ApplicationPool = 'WoodgroveBankUIPool'
+            DependsOn       = '[WindowsFeature]WebServerRole'
+        }
+
+        xWebAppPool WoodgroveBankUIWebAppPool {
+            Name            = 'WoodgroveBankUIPool'
+        }
+
         xWebsite WoodgroveBankAPI   
         {  
             Ensure          = 'Present'
             Name            = 'WoodgroveBankAPI'
             PhysicalPath    = 'D:\api'
-            BindingInfo     = @(
-                MSFT_xWebBindingInformation
+            BindingInfo     = MSFT_xWebBindingInformation
                 {
                     Protocol = 'HTTP'
                     Port = 8080
+                    HostName = '*'
                 }
-            )
             State           = 'Started'
             ApplicationPool = 'WoodgroveBankAPIPool'
             DependsOn       = '[WindowsFeature]WebServerRole'
@@ -111,7 +130,7 @@ Configuration WindowsWebServer {
         xWebAppPool WoodgroveBankAPIWebAppPool {
             Name            = 'WoodgroveBankAPIPool'
         }
-
+ 
 	    Script DownloadWebDeploy
         {
             TestScript = {
