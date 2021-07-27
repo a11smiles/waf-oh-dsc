@@ -82,6 +82,14 @@ Configuration WindowsWebServer {
             Name            = 'Web-Mgmt-Console'
             DependsOn       = '[WindowsFeature]WebServerRole'
         } 
+
+        xWebsite DefaultSite
+        {
+            Ensure          = "Present" 
+            Name            = "Default Web Site" 
+            State           = "Stopped" 
+            PhysicalPath    = "C:\inetpub\wwwroot" 
+        }
   
         xWebsite WoodgroveBankUI   
         {  
@@ -106,7 +114,7 @@ Configuration WindowsWebServer {
         {  
             Ensure          = 'Present'
             Name            = 'WoodgroveBankAPI'
-            PhysicalPath    = 'D:\web'
+            PhysicalPath    = 'D:\api'
             BindingInfo = @(MSFT_xWebBindingInformation
                 {
                     Protocol = 'HTTP'
