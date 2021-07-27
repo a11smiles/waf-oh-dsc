@@ -18,9 +18,9 @@
         xSqlServerDatabase CreateDatabase
         {
             Ensure          = 'Present'
-            ServerName      = 'sqlsvr1'
+            SQLServer       = 'sqlsvr1'
             Name            = 'CustomerPortal'
-            InstanceName    = 'MSSSQLSERVER'
+            SQLInstanceName = 'MSSSQLSERVER'
 
             PsDscRunAsCredential = $sqlLoginCredential
         }
@@ -30,8 +30,8 @@
             Ensure          = 'Present'
             Name            = 'webapp'
             LoginType       = 'SqlLogin'
-            ServerName      = 'sqlsvr1'
-            InstanceName    = 'MSSSQLSERVER'
+            SQLServer       = 'sqlsvr1'
+            SQLInstanceName = 'MSSSQLSERVER'
             LoginCredential = $loginCredential
             LoginMustChangePassword        = $false
             LoginPasswordExpirationEnabled = $false
@@ -44,8 +44,8 @@
         xSqlServerDatabaseUser CreateDatabaseUser
         {
             Ensure          = 'Present'
-            ServerName      = 'sqlsvr1'
-            InstanceName    = 'MSSSQLSERVER'
+            SQLServer       = 'sqlsvr1'
+            SQLInstanceName = 'MSSSQLSERVER'
             DatabaseName    = 'CustomerPortal'
             Name            = 'webapp'
             UserType        = 'Login'
