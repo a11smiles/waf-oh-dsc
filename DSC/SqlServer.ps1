@@ -1,5 +1,5 @@
 ﻿Configuration SqlServer {
-
+    
     Import-DscResource -ModuleName xPSDesiredStateConfiguration, SqlServerDsc
 
     [string]$username = 'webapp'
@@ -55,4 +55,13 @@
             DependsOn       = '[SqlLogin]CreateDatabaseLogin'
         }
       }
+}
+
+$cd = @{
+    AllNodes = @(
+        @{
+            NodeName = 'localhost'
+            PSDscAllowPlainTextPassword = $true
+        }
+    )
 }
