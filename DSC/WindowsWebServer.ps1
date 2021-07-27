@@ -83,6 +83,48 @@ Configuration WindowsWebServer {
             DependsOn       = '[WindowsFeature]WebServerRole'
         } 
 
+        <#
+            Install Dotnet Core Hosting Bundle
+        #>
+        xRemoteFile DownloadDotNetCoreHostingBundle {
+            Uri = "https://go.microsoft.com/fwlink/?linkid=844461" #https://docs.microsoft.com/en-us/aspnet/core/publishing/iis
+            DestinationPath = "C:\temp\dnhosting.exe"
+            MatchSource = $false
+            #Proxy = "optional, your corporate proxy here"
+            #ProxyCredential = "optional, your corporate proxy credential here"
+        }
+
+        # Discover your product name and id with Get-WmiObject Win32_product | ft IdentifyingNumber,Name after installing it once
+        xPackage InstallDotNetCoreHostingBundle {
+            Name = "Microsoft ASP.NET Core Module"
+            ProductId = "B1B05FBB-1255-4F5B-9BAF-43B971A92613"
+            Arguments = "/quiet /norestart /log C:\temp\dnhosting_install.log"
+            Path = "C:\temp\dnhosting.exe"
+            DependsOn = @("[WindowsFeature]InstallIIS",
+                          "[xRemoteFile]DownloadDotNetCoreHostingBundle")
+        }
+
+        Script PutDotNetOnPath {
+            SetScript = {
+                $env:Path = $env:Path + "C:\Program Files\dotnet\;"
+            }
+            TestScript = {
+                return $env:Path.Contains("C:\Program Files\dotnet\;")
+            }
+            GetScript = {
+                return @{
+                    SetScript = $SetScript
+                    TestScript = $TestScript
+                    GetScript = $GetScript
+                    Result = "Set dotnet path"
+                }
+            }
+        }
+
+
+        <#
+            Configure Web Sites
+        #>
         xWebAppPool DefaultAppPool {
             Name            = 'DefaultAppPool'
             Ensure          = 'Absent'
@@ -113,7 +155,7 @@ Configuration WindowsWebServer {
                 }
             State           = 'Started'
             ApplicationPool = 'WoodgroveBankUIPool'
-            DependsOn       = 'WoodgroveBankUIWebAppPool'
+            DependsOn       = '[xWebAppPool]WoodgroveBankUIWebAppPool'
         }
         
         xWebAppPool WoodgroveBankAPIWebAppPool {
@@ -134,11 +176,13 @@ Configuration WindowsWebServer {
                 }
             State           = 'Started'
             ApplicationPool = 'WoodgroveBankAPIPool'
-            DependsOn       = 'WoodgroveBankAPIWebAppPool'
+            DependsOn       = '[xwebAppPool]WoodgroveBankAPIWebAppPool'
         }
 
 
- 
+        <#
+            Install Web Deploy
+        #>
 	    Script DownloadWebDeploy
         {
             TestScript = {
