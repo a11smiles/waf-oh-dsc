@@ -1,6 +1,6 @@
 ﻿Configuration WindowsWebServer {
 
-    Import-DscResource -ModuleName xPSDesiredStateConfiguration, xSqlServer
+    Import-DscResource -ModuleName xPSDesiredStateConfiguration, SqlServerDsc
 
     [string]$username = 'webapp'
     [string]$password = 'S0m3R@ndomW0rd$'
