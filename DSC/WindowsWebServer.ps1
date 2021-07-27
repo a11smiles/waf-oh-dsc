@@ -83,12 +83,21 @@ Configuration WindowsWebServer {
             DependsOn       = '[WindowsFeature]WebServerRole'
         } 
 
+        xWebAppPool DefaultAppPool {
+            Name            = 'DefaultAppPool'
+            Ensure          = 'Absent'
+        }
+
         xWebsite DefaultSite
         {
-            Ensure          = 'Present'
+            Ensure          = 'Absent'
             Name            = 'Default Web Site' 
-            State           = 'Stopped'
             PhysicalPath    = 'C:\inetpub\wwwroot'
+        }
+
+        xWebAppPool WoodgroveBankUIWebAppPool {
+            Name            = 'WoodgroveBankUIPool'
+            DependsOn       = '[WindowsFeature]WebServerRole'
         }
 
         xWebsite WoodgroveBankUI   
@@ -104,13 +113,14 @@ Configuration WindowsWebServer {
                 }
             State           = 'Started'
             ApplicationPool = 'WoodgroveBankUIPool'
+            DependsOn       = 'WoodgroveBankUIWebAppPool'
+        }
+        
+        xWebAppPool WoodgroveBankAPIWebAppPool {
+            Name            = 'WoodgroveBankAPIPool'
             DependsOn       = '[WindowsFeature]WebServerRole'
         }
-
-        xWebAppPool WoodgroveBankUIWebAppPool {
-            Name            = 'WoodgroveBankUIPool'
-        }
-
+        
         xWebsite WoodgroveBankAPI   
         {  
             Ensure          = 'Present'
@@ -124,12 +134,10 @@ Configuration WindowsWebServer {
                 }
             State           = 'Started'
             ApplicationPool = 'WoodgroveBankAPIPool'
-            DependsOn       = '[WindowsFeature]WebServerRole'
+            DependsOn       = 'WoodgroveBankAPIWebAppPool'
         }
 
-        xWebAppPool WoodgroveBankAPIWebAppPool {
-            Name            = 'WoodgroveBankAPIPool'
-        }
+
  
 	    Script DownloadWebDeploy
         {
