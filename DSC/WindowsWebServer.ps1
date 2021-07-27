@@ -1,6 +1,6 @@
 Configuration WindowsWebServer {
 
-    Import-DscResource -ModuleName PSDesiredStateConfiguration, xWebAdministration
+    Import-DscResource -ModuleName PSDesiredStateConfiguration, xWebAdministration, xNetworking
 
     Node localhost {
 
