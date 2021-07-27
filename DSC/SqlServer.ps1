@@ -41,6 +41,7 @@
             DependsOn       = '[xSqlServerDatabase]CreateDatabase'
         }
 
+        <#
         xSqlServerDatabaseUser CreateDatabaseUser
         {
             Ensure          = 'Present'
@@ -54,5 +55,6 @@
             PsDscRunAsCredential = $sqlLoginCredential
             DependsOn       = '[xSqlServerLogin]CreateDatabaseLogin'
         }
+        #>
       }
 }
