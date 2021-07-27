@@ -1,6 +1,6 @@
 ﻿Configuration SqlServer {
 
-    Import-DscResource -ModuleName xPSDesiredStateConfiguration, xSqlServer
+    Import-DscResource -ModuleName xPSDesiredStateConfiguration, SqlServerDsc
 
     [string]$username = 'webapp'
     [string]$password = 'S0m3R@ndomW0rd$'
@@ -15,46 +15,44 @@
     
     Node localhost {
 
-        xSqlServerDatabase CreateDatabase
+        SqlDatabase CreateDatabase
         {
             Ensure          = 'Present'
-            SQLServer       = 'sqlsvr1'
+            ServerName      = 'sqlsvr1'
             Name            = 'CustomerPortal'
-            SQLInstanceName = 'MSSSQLSERVER'
+            InstanceName = 'MSSSQLSERVER'
 
             PsDscRunAsCredential = $sqlLoginCredential
         }
 
-        xSqlServerLogin CreateDatabaseLogin
+        SqlLogin CreateDatabaseLogin
         {
             Ensure          = 'Present'
             Name            = 'webapp'
             LoginType       = 'SqlLogin'
-            SQLServer       = 'sqlsvr1'
-            SQLInstanceName = 'MSSSQLSERVER'
+            ServerName      = 'sqlsvr1'
+            InstanceName    = 'MSSSQLSERVER'
             LoginCredential = $loginCredential
             LoginMustChangePassword        = $false
             LoginPasswordExpirationEnabled = $false
             LoginPasswordPolicyEnforced    = $true
 
             PsDscRunAsCredential = $sqlLoginCredential
-            DependsOn       = '[xSqlServerDatabase]CreateDatabase'
+            DependsOn       = '[SqlDatabase]CreateDatabase'
         }
 
-        <#
-        xSqlServerDatabaseUser CreateDatabaseUser
+        SqlDatabaseUser CreateDatabaseUser
         {
             Ensure          = 'Present'
-            SQLServer       = 'sqlsvr1'
-            SQLInstanceName = 'MSSSQLSERVER'
+            ServerName      = 'sqlsvr1'
+            InstanceName    = 'MSSSQLSERVER'
             DatabaseName    = 'CustomerPortal'
             Name            = 'webapp'
             UserType        = 'Login'
             LoginName       = 'webapp'
 
             PsDscRunAsCredential = $sqlLoginCredential
-            DependsOn       = '[xSqlServerLogin]CreateDatabaseLogin'
+            DependsOn       = '[SqlLogin]CreateDatabaseLogin'
         }
-        #>
       }
 }
