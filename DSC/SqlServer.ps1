@@ -1,13 +1,24 @@
 ﻿Configuration SqlServer {
     
-    Import-DscResource -ModuleName xPSDesiredStateConfiguration, SqlServerDsc
+    param(
+        [Parameter(Mandatory=$true)]
+        [ValidateNotNullorEmpty()]
+        [PSCredential]
+        $LoginCredential,
 
+        [Parameter(Mandatory=$true)]
+        [ValidateNotNullorEmpty()]
+        [PSCredential]
+        $SqlCredential
+    )
 
+    Import-DscResource -ModuleName PSDesiredStateConfiguration, SqlServerDsc
+
+    <#
     [string]$username = 'webapp'
     [string]$password = 'S0m3R@ndomW0rd$'
     [securestring]$securedPassword = ConvertTo-SecureString $password -AsPlainText -Force
     [pscredential]$loginCredential = New-Object System.Management.Automation.PSCredential ($username, $securedPassword)
-    <#
 
     [string]$sqlUsername = 'cloudsqladmin'
     [string]$sqlPassword = 'Pass@word1234!'
@@ -21,6 +32,7 @@
         {
             Ensure          = 'Present'
             ServerName      = 'sqlsvr1'
+            InstanceName    = 'MSSSQLSERVER'
             Name            = 'CustomerPortal'
 
             PsDscRunAsCredential = $SqlCredential
@@ -32,6 +44,7 @@
             Name            = 'webapp'
             LoginType       = 'SqlLogin'
             ServerName      = 'sqlsvr1'
+            InstanceName    = 'MSSSQLSERVER'
             LoginCredential = $loginCredential
             LoginMustChangePassword        = $false
             LoginPasswordExpirationEnabled = $false
