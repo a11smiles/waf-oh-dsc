@@ -32,7 +32,7 @@
         {
             Ensure          = 'Present'
             ServerName      = 'sqlsvr1'
-            InstanceName    = 'MSSSQLSERVER'
+            InstanceName    = ''
             Name            = 'CustomerPortal'
 
             PsDscRunAsCredential = $ServerCredential
