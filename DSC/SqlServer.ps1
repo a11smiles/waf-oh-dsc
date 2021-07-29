@@ -12,7 +12,7 @@
         $SqlCredential
     )
 
-    Import-DscResource -ModuleName PSDesiredStateConfiguration, SqlServerDsc
+    Import-DscResource -ModuleName @{ModuleName="PSDesiredStateConfiguration";ModuleVersion="2.0.5"}, SqlServerDsc
 
     <#
     [string]$username = 'webapp'
