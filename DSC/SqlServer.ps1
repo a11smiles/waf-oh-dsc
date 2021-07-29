@@ -31,8 +31,8 @@
         SqlDatabase CreateDatabase
         {
             Ensure          = 'Present'
-            ServerName      = 'sqlsvr1'
-            InstanceName    = ''
+            ServerName      = '.'
+            InstanceName    = 'sqlsvr1'
             Name            = 'CustomerPortal'
 
             PsDscRunAsCredential = $ServerCredential
