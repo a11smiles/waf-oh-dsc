@@ -4,12 +4,12 @@
         [Parameter(Mandatory=$true)]
         [ValidateNotNullorEmpty()]
         [PSCredential]
-        $LoginCredential,
+        $ServerCredential,
 
         [Parameter(Mandatory=$true)]
         [ValidateNotNullorEmpty()]
         [PSCredential]
-        $SqlCredential
+        $DatabaseCredential
     )
 
     Import-DscResource -ModuleName PSDesiredStateConfiguration, SqlServerDsc
@@ -35,7 +35,7 @@
             InstanceName    = 'MSSSQLSERVER'
             Name            = 'CustomerPortal'
 
-            PsDscRunAsCredential = $SqlCredential
+            PsDscRunAsCredential = $ServerCredential
         }
         <#
         SqlLogin CreateDatabaseLogin
