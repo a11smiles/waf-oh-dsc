@@ -12,7 +12,7 @@
         $DatabaseCredential
     )
 
-    Import-DscResource -ModuleName PSDesiredStateConfiguration, SqlServerDsc
+    Import-DscResource -ModuleName PSDesiredStateConfiguration, SqlServerDsc, xNetworking
 
     Node localhost {
 
@@ -54,6 +54,37 @@
 
             PsDscRunAsCredential = $ServerCredential
             DependsOn       = '[SqlLogin]CreateDatabaseLogin'
+        }
+
+        SqlDatabaseRole SetUserAsOwner
+        {
+            Ensure          = 'Present'
+            ServerName      = 'sqlsvr1'
+            InstanceName    = 'MSSQLSERVER'
+            DatabaseName    = 'CustomerPortal'
+            Name            = 'db_owner'
+            Members         = @('webapp')
+
+            PsDscRunAsCredential = $ServerCredential
+            DependsOn       = '[SqlDatabaseUser]CreateDatabaseUser'
+        }
+
+        FirewallProfile ConfigurePrivateFirewallProfile
+        {
+            Name            = 'Private'
+            Enabled         = 'False'
+        }
+
+        FirewallProfile ConfigurePublicFirewallProfile
+        {
+            Name            = 'Public'
+            Enabled         = 'False'
+        }
+
+        FirewallProfile ConfigureDomainFirewallProfile
+        {
+            Name            = 'Domain'
+            Enabled         = 'False'
         }
     }
 }
