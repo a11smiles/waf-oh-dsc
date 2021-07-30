@@ -12,7 +12,7 @@
         $DatabaseCredential
     )
 
-    Import-DscResource -ModuleName PSDesiredStateConfiguration, SqlServerDsc, xNetworking
+    Import-DscResource -ModuleName PSDesiredStateConfiguration, SqlServerDsc, NetworkingDsc
 
     Node localhost {
 
