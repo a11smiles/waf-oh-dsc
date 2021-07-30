@@ -10,7 +10,7 @@
             ActionExecutable   = 'D:\jobs\Processor.exe'
             ScheduleType       = 'Once'
             RepeatInterval     = '01:00:00'
-            RepititionDuration = 'Indefinitely'
+            RepetitionDuration = 'Indefinitely'
         }
     }
 }
