@@ -63,7 +63,7 @@
             InstanceName    = 'MSSQLSERVER'
             DatabaseName    = 'CustomerPortal'
             Name            = 'db_owner'
-            Members         = @('webapp')
+            MembersToInclude = @('webapp')
 
             PsDscRunAsCredential = $ServerCredential
             DependsOn       = '[SqlDatabaseUser]CreateDatabaseUser'
